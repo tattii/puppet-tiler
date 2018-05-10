@@ -41,9 +41,10 @@ RUN apt-get update \
       xdg-utils \
       wget
 
-WORKDIR /app
-RUN npm i puppeteer
+RUN mkdir -p /app
+RUN cd /app && npm i puppeteer
 
-COPY ./script.js .
-
-ENTRYPOINT ["node", "/app/script.js"]
+ENV NODE_PATH=/app/node_modules
+VOLUME /data
+WORKDIR /data
+RUN /bin/bash
