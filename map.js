@@ -1,5 +1,4 @@
 const puppeteer = require('puppeteer');
-const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 
 (async () => {
   const browser = await puppeteer.launch({
@@ -9,10 +8,11 @@ const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
     ]
   });
   const page = await browser.newPage();
-  await page.goto('http://localhost/mapbox-gl-js/');
-  await sleep(3000);
+  await page.goto('http://localhost/mapbox-gl-js/'); //, { waitUntil: 'networkidle0' });
+  const waitLoaded = page.waitForFunction('map.loaded() == true');
+  await waitLoaded;
   await page.screenshot({
-    path: 'map-jp.png', 
+    path: 'map-jp3.png', 
     clip: { x: 0, y: 0, width: 256, height: 256 },
     omitBackground: true
   });
