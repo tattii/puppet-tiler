@@ -44,7 +44,12 @@ RUN apt-get update \
 RUN mkdir -p /app
 RUN cd /app && npm i puppeteer
 
+RUN apt-get install -y nginx
+RUN sed -i -e 's/root .*/root \/data;/' /etc/nginx/sites-enabled/default
+
+
 ENV NODE_PATH=/app/node_modules
 VOLUME /data
 WORKDIR /data
-RUN /bin/bash
+EXPOSE 80
+ENTRYPOINT service nginx start && /bin/bash
