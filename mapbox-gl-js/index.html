@@ -14,14 +14,58 @@
 <body>
   <div id='map'></div>
   <script>
-      var map = new mapboxgl.Map({
-        container: 'map',
-        style: 'http://35.187.221.117:8080/styles/klokantech-basic/style.json',
-        hash: true,
-        attributionControl: false,
-        zoom: 3.35,
-        center: [137.44, 38.18]
-      });
+var zoom = 3,
+    center = [137.44, 38.18];
+var query = getUrlVars();
+if (query.z){
+    zoom = query.z - 1;
+    center = getTileCenter(query.x, query.y, query.z);	
+}
+
+var map = new mapboxgl.Map({
+    container: 'map',
+    style: 'http://35.187.221.117:8080/styles/klokantech-basic/style.json',
+    hash: false,
+    attributionControl: false,
+    zoom: zoom,
+    center: center
+});
+
+function getUrlVars()
+{
+    var vars = [];
+    var url = window.location.search;
+
+    var hash  = url.slice(1).split('&');    
+    for (var i = 0; i < hash.length; i++) {
+        var array = hash[i].split('=');
+        vars[array[0]] = array[1];
+    }
+    return vars;
+}
+
+function getTileCenter(x, y, z){
+    var merc = pixelsToMeters(z, x * 256 + 128, y * 256 + 128);
+    return metersToLatLng(merc);
+}
+
+// https://github.com/chriswhong/map-tile-functions/blob/master/boundsFromTile.js
+function metersToLatLng(coord) {
+    lng = (coord[0] / (2 * Math.PI * 6378137 / 2.0)) * 180.0
+  
+    lat = (coord[1] / (2 * Math.PI * 6378137 / 2.0)) * 180.0
+    lat = 180 / Math.PI * (2 * Math.atan( Math.exp( lat * Math.PI / 180.0)) - Math.PI / 2.0)
+  
+    return [lng, lat]
+}
+
+function pixelsToMeters(z, x, y) {
+    var res = (2 * Math.PI * 6378137 / 256) / (Math.pow(2, z));
+    mx = x * res - (2 * Math.PI * 6378137 / 2.0);
+    my = y * res - (2 * Math.PI * 6378137 / 2.0);
+    my = -my;
+    return [mx, my];
+}
   </script>
 </body>
 </html>
