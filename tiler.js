@@ -5,10 +5,11 @@ module.exports = class Tiler {
   constructor(style, dir, options) {
     this.style = style;
     this.dir = dir;
-    this.options = options;
+    this.options = options || {};
   }
 
   async init() {
+    console.time('init');
     this.browser = await puppeteer.launch({
       args: [
         '--no-sandbox',
@@ -22,16 +23,19 @@ module.exports = class Tiler {
     if (this.options.retina){
       await this.page.setViewport({width: 512, height: 512, deviceScaleFactor: 2});
     }
+
+    let url = 'http://localhost/mapbox-gl-js/?style=' + this.style;
+    await this.page.goto(url, { waitUntil: 'networkidle0' });
+    console.timeEnd('init');
   }
 
   async getTile(x, y, z) {
-    let url = 'http://localhost/mapbox-gl-js/?x=' + x + '&y=' + y + '&z=' + z + '&style=' + this.style;
     let label = 'get: ' + [x, y, z].join(', ');
 
     // wait map fully rendered (include surrounding tiles)
     console.time(label);
-    await this.page.goto(url, { waitUntil: 'networkidle0' });
-    const waitLoaded = this.page.waitForFunction('map.loaded() == true');
+    await this.page.evaluate('setXYZ(' + [x, y, z].join(',') + ')');
+    const waitLoaded = this.page.waitForFunction('map.loaded() == true && map.areTilesLoaded() == true');
     await waitLoaded;
     console.timeEnd(label);
 

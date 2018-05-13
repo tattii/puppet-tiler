@@ -35,6 +35,12 @@ var map = new mapboxgl.Map({
     center: center
 });
 
+function setXYZ(x, y, z){
+    var p = getTileCenter(x, y, z);
+    map.jumpTo({ center: p, zoom: z - 1 });
+}
+
+
 function getUrlVars()
 {
     var vars = [];
