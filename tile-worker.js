@@ -1,9 +1,13 @@
 const Tiler = require("./tiler");
-const tiler = new Tiler('http://172.17.0.1:8080/styles/klokantech-basic/style.json', 'tile');
+let tiler = null;
 
 
 module.exports = async (data, tile, writeData, done) => {
-  if (!tiler.page) await tiler.init();
+  if (!tiler) {
+    let options = global.mapOptions;
+    tiler = new Tiler(options.style, options.dir, { retina: options.retina });
+    await tiler.init();
+  }
 
   await tiler.getTile(tile[0], tile[1], tile[2]);
   done();
