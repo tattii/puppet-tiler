@@ -2,9 +2,10 @@ const puppeteer = require('puppeteer');
 const makedir = require('make-dir');
 
 module.exports = class Tiler {
-  constructor(style, dir) {
+  constructor(style, dir, options) {
     this.style = style;
     this.dir = dir;
+    this.options = options;
   }
 
   async init() {
@@ -16,6 +17,11 @@ module.exports = class Tiler {
     });
 
     this.page = await this.browser.newPage();
+
+    // set retina
+    if (this.options.retina){
+      await this.page.setViewport({width: 512, height: 512, deviceScaleFactor: 2});
+    }
   }
 
   async getTile(x, y, z) {
