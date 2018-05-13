@@ -15,16 +15,20 @@
   <div id='map'></div>
   <script>
 var zoom = 3,
-    center = [137.44, 38.18];
+    center = [137.44, 38.18],
+    style = 'http://' + location.hostname + ':8080/styles/klokantech-basic/style.json';
 var query = getUrlVars();
 if (query.z){
     zoom = query.z - 1;
-    center = getTileCenter(query.x, query.y, query.z);	
+    center = getTileCenter(query.x, query.y, query.z);
+}
+if (query.style){
+    style = query.style;
 }
 
 var map = new mapboxgl.Map({
     container: 'map',
-    style: 'http://35.187.221.117:8080/styles/klokantech-basic/style.json',
+    style: style,
     hash: false,
     attributionControl: false,
     zoom: zoom,
