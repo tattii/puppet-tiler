@@ -1,0 +1,24 @@
+{
+  "name": "tiler",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "@mapbox/tile-reduce": "^3.2.0",
+    "make-dir": "^1.3.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tattii/tiler.git"
+  },
+  "author": "Yuta Tachibana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tattii/tiler/issues"
+  },
+  "homepage": "https://github.com/tattii/tiler#readme"
+}
