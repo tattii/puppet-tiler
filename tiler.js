@@ -21,7 +21,7 @@ module.exports = class Tiler {
 
     // set retina
     if (this.options.retina){
-      await this.page.setViewport({width: 512, height: 512, deviceScaleFactor: 2});
+      await this.page.setViewport({width: 1024, height: 1024, deviceScaleFactor: 2});
     }
 
     let url = 'http://localhost/mapbox-gl-js/?style=' + this.style;
@@ -43,7 +43,7 @@ module.exports = class Tiler {
     await makedir(dst);
     await this.page.screenshot({
       path: dst + '/' + y + '.png', 
-      clip: { x: 0, y: 0, width: 256, height: 256 },
+      clip: { x: 128, y: 128, width: 256, height: 256 },
       omitBackground: true
     });
   }
